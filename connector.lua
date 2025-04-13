@@ -1,4 +1,6 @@
-package.path = package.path .. ";" .. g_lfs.writedir() .. "Scripts\\SayIntentions\\?.lua"
+local dcs_si_lfs=require('lfs')
+
+package.path = package.path .. ";" .. dcs_si_lfs.writedir() .. "Scripts\\SayIntentions\\?.lua"
 
 -- Imports
 local json = loadfile("Scripts//JSON.lua")()
@@ -22,7 +24,7 @@ local lastVerticalSpeed = 0
 -- Helper Functions
 --------------------------------------------------------------------------------
 local function loadAircraftModule(name)
-    local path = g_lfs.writedir() .. "Scripts\\SayIntentions\\aircraft\\" .. name:lower() .. ".lua"
+    local path = dcs_si_lfs.writedir() .. "Scripts\\SayIntentions\\aircraft\\" .. name:lower() .. ".lua"
     local aircraftScript, err = loadfile(path)
 
     if aircraftScript then

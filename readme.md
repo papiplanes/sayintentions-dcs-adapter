@@ -28,7 +28,7 @@ Each of these aircraft specific attributes must be extracted uniquely for each a
 1. Download the latest release zip file
 2. Upack the release zip to get "SayIntentions" folder
 3. Put the `SayIntentions` folder in `<USER>/Saved Games/<DCS>/Scripts/`
-4. Add the following line to `Export.lua`. 
+4. Add the following line to `Export.lua`. If the file does not exist, create it and add the following line. 
 
-   ```bash
-   dofile(lfs.writedir()..[[Scripts\SayIntentions\connector.lua]])
+```bash
+local dcssilfs=require('lfs');dofile(dcssilfs.writedir()..'Scripts\\SayIntentions\\connector.lua')
