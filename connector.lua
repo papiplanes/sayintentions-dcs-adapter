@@ -19,6 +19,7 @@ local dcsVersion = nil
 local currentAircraftModule = nil
 local lastSimOnGround = nil
 local lastVerticalSpeed = 0
+local currentModuleName = nil
 
 --------------------------------------------------------------------------------
 -- Helper Functions
@@ -41,11 +42,12 @@ end
 
 local function initializeVersionInfo()
     local version = LoGetVersionInfo()
-    return string.format("ProductVersion: %d.%d.%d.%d",
+    return string.format("DCS Version: %d.%d.%d.%d  Module: %s",
         version.ProductVersion[1],
         version.ProductVersion[2],
         version.ProductVersion[3],
-        version.ProductVersion[4]
+        version.ProductVersion[4],
+        currentModuleName
     )
 end
 
@@ -76,22 +78,22 @@ local function getCommonExportFields()
     local lng = ownshipData.LatLongAlt.Long
     local windDirection, windSpeed = utils.vectorToWind(LoGetVectorWindVelocity())
 
-    data["AIRSPEED INDICATED"] = math.floor(utils.mpsToKnots(LoGetIndicatedAirSpeed()))
-    data["AIRSPEED TRUE"] = math.floor(utils.mpsToKnots(LoGetTrueAirSpeed()))
-    data["MAGNETIC COMPASS"] = math.floor(magneticHeading)
-    data["MAGVAR"] = math.floor(magvar)
-    data["PLANE ALTITUDE"] = math.floor(utils.metersToFeet(LoGetAltitudeAboveSeaLevel()))
-    data["PLANE BANK DEGREES"] = math.floor(utils.radToDeg(bank))
-    data["PLANE PITCH DEGREES"] = math.floor(utils.radToDeg(pitch))
-    data["PLANE HEADING DEGREES TRUE"] = math.floor(trueHeading)
-    data["PLANE LATITUDE"] = lat
-    data["PLANE LONGITUDE"] = lng
+    data["AIRSPEED INDICATED"] = math.floor(utils.mpsToKnots(LoGetIndicatedAirSpeed() or 0))
+    data["AIRSPEED TRUE"] = math.floor(utils.mpsToKnots(LoGetTrueAirSpeed() or 0))
+    data["MAGNETIC COMPASS"] = math.floor(magneticHeading or 0)
+    data["MAGVAR"] = math.floor(magvar or 0)
+    data["PLANE ALTITUDE"] = math.floor(utils.metersToFeet(LoGetAltitudeAboveSeaLevel() or 0))
+    data["PLANE BANK DEGREES"] = math.floor(utils.radToDeg(bank or 0))
+    data["PLANE PITCH DEGREES"] = math.floor(utils.radToDeg(pitch or 0))
+    data["PLANE HEADING DEGREES TRUE"] = math.floor(trueHeading or 0)
+    data["PLANE LATITUDE"] = lat or 0
+    data["PLANE LONGITUDE"] = lng or 0
     data["SEA LEVEL PRESSURE"] = LoGetBasicAtmospherePressure() or 2992
-    data["VERTICAL SPEED"] = math.floor(utils.metersPerSecondToFeetPerMinute(LoGetVerticalVelocity()))
-    data["AMBIENT WIND DIRECTION"] = math.floor(windDirection)
-    data["AMBIENT WIND VELOCITY"] = math.floor(windSpeed)
-    data["LOCAL TIME"] = LoGetMissionStartTime()
-    data["ZULU TIME"] = LoGetMissionStartTime()
+    data["VERTICAL SPEED"] = math.floor(utils.metersPerSecondToFeetPerMinute(LoGetVerticalVelocity() or 0))
+    data["AMBIENT WIND DIRECTION"] = math.floor(windDirection or 0)
+    data["AMBIENT WIND VELOCITY"] = math.floor(windSpeed or 0)
+    data["LOCAL TIME"] = LoGetMissionStartTime() or 0
+    data["ZULU TIME"] = LoGetMissionStartTime() or 0
 
     -- Metadata
     data["name"] = "DCS"
@@ -141,21 +143,48 @@ local function writeExportFile(data)
     end
 end
 
+local function initializeModule()
+    local selfData = LoGetSelfData()
+    if selfData and selfData.Name then
+        logger.log("Detected aircraft: " .. selfData.Name:lower())
+        currentAircraftModule = loadAircraftModule(selfData.Name)
+        dcsVersion = initializeVersionInfo()
+    end
+end
+
+local function detectSlotChange()
+    local selfData = LoGetSelfData()
+    if selfData and selfData.Name then
+        local latestModuleName = selfData.Name
+        if latestModuleName and latestModuleName ~= currentModuleName then
+            logger.log("Loainding new module")
+            currentModuleName = latestModuleName
+            initializeModule()
+        end
+    end
+end
+
+local function detectDeath()
+    local isDead = LoGetTrueAirSpeed() == nil
+    if isDead then
+        lastSimOnGround = nil
+        lastVerticalSpeed = 0
+        currentAircraftModule = nil
+    end
+end
+
 --------------------------------------------------------------------------------
 -- DCS Export Hooks
 --------------------------------------------------------------------------------
 
 function LuaExportStart()
-    local selfData = LoGetSelfData()
-    if selfData and selfData.Name then
-        dcsVersion = initializeVersionInfo()
-        logger.log("Detected aircraft: " .. selfData.Name:lower())
-        currentAircraftModule = loadAircraftModule(selfData.Name)
-    end
+    logger.log("Export Script Loaded.")
 end
 
 function LuaExportActivityNextEvent(timestamp)
-    -- When we have a valid aircraft, build the export json for Say Intentions AI
+    detectSlotChange()
+    detectDeath()
+
     if currentAircraftModule then
         local sayIntetionsExportTable = getCommonExportFields()
         includeAircraftSpecificFields(sayIntetionsExportTable)
@@ -164,10 +193,14 @@ function LuaExportActivityNextEvent(timestamp)
 
         -- Handle setting values in cockpit
         -- TODO
+    else
+        logger.log("Can not find current aircraft module")
     end
+
     return timestamp + 1.0
 end
 
 function LuaExportStop()
-    -- Optional cleanup logic
+    logger.log("Export Script Stopping.")
+
 end

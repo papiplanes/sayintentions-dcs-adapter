@@ -42,21 +42,24 @@ function FA18.generateExportFields()
         local ThousandsHudValueAlt = HUD.HUD_altitude_above_1000_thousands
         local HundredsHudValueAlt = HUD.HUD_altitude_above_1000_hund_tenths
         local AltitudeBelow100 = HUD.HUD_altitude_below_1000
-        if ThousandsHudValueAlt then
-            IndicatedAltitude = ThousandsHudValueAlt * 1000
+        if ThousandsHudValueAlt ~= nil then
+            local cleanedThousands =  string.gsub(ThousandsHudValueAlt, "%D", "") or "0"
+            local numberThousdands = tonumber(cleanedThousands)
+            IndicatedAltitude = numberThousdands * 1000
         end
 
-        if HundredsHudValueAlt then
-            IndicatedAltitude = IndicatedAltitude + HundredsHudValueAlt
+        if HundredsHudValueAlt ~= nil then
+            local cleanedHundreds =  string.gsub(HundredsHudValueAlt, "%D", "") or "0"
+            local numberHundreds = tonumber(cleanedHundreds)
+            IndicatedAltitude = IndicatedAltitude + numberHundreds
         else
-            IndicatedAltitude = AltitudeBelow100
+            local cleanBelow1000 =  string.gsub(AltitudeBelow100, "%D", "") or "0"
+            IndicatedAltitude = tonumber(cleanBelow1000) or 0
         end
-        local cleanedAltitude = string.gsub(IndicatedAltitude, "%D", "")
-        IndicatedAltitude = tonumber(cleanedAltitude) or 0
     end
 
     if MainPanel then
-        BatterySwitch = MainPanel:get_argument_value(404) and ENABLED or DISABLED
+        BatterySwitch = MainPanel:get_argument_value(404) == 1 and ENABLED or DISABLED
         Com1Volume = MainPanel:get_argument_value(108) * 100
         Com2Volume = MainPanel:get_argument_value(123) * 100
         Com1Enabled = Com1Volume > 0 and ENABLED or DISABLED
@@ -89,11 +92,22 @@ function FA18.generateExportFields()
         end
     end
 
-    IsOnGround = LoGetAltitudeAboveGroundLevel() <= 2 and ENABLED or DISABLED
-    TotalWeight = math.floor(LoGetEngineInfo().fuel_internal * MAX_FUEL_INTERNAL_LBS + EMPTY_WEIGHT_LBS + PILOT_WEIGHT)
+    local latestAGL = LoGetAltitudeAboveGroundLevel()
+    local latestEngineInfo = LoGetEngineInfo()
+    local latestTAS = LoGetTrueAirSpeed() or 0
+    
+    IsOnGround = DISABLED
+    if latestAGL and latestAGL <= 2 then
+        IsOnGround = ENABLED
+    end
 
-    if IsOnGround then
-        WheelRPM = math.floor(utils.calculateWheelRPMFromKnotsAndRadius(LoGetTrueAirSpeed(), WHEEL_RADIUS_INCH))
+    TotalWeight = EMPTY_WEIGHT_LBS + PILOT_WEIGHT
+    if latestEngineInfo and latestEngineInfo.fuel_internal then 
+        TotalWeight = TotalWeight + math.floor(latestEngineInfo.fuel_internal * MAX_FUEL_INTERNAL_LBS)
+    end
+
+    if IsOnGround == ENABLED then
+        WheelRPM = math.floor(utils.calculateWheelRPMFromKnotsAndRadius(latestTAS, WHEEL_RADIUS_INCH))
     else
         WheelRPM = 0
     end
