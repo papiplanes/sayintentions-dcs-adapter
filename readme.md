@@ -19,7 +19,7 @@ SayIntentions.AI provides AI-powered ATC for flight simulators — this adapter 
 
 ```bash
 local dcssilfs=require('lfs');dofile(dcssilfs.writedir()..'Scripts\\SayIntentions\\connector.lua')
-
+```
 
 ## ✅ Supported Modules
 
