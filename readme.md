@@ -10,6 +10,16 @@
 
 SayIntentions.AI provides AI-powered ATC for flight simulators — this adapter allows DCS pilots to tap into that realism by transmitting aircraft position, heading, altitude, and other key data points in real-time.
 
+## 🔧 Setup Instructions
+
+1. Download the latest release zip file
+2. Upack the release zip to get "SayIntentions" folder
+3. Put the `SayIntentions` folder in `<USER>/Saved Games/<DCS>/Scripts/`
+4. Add the following line to `Export.lua`. If the file does not exist, create it and add the following line. 
+
+```bash
+local dcssilfs=require('lfs');dofile(dcssilfs.writedir()..'Scripts\\SayIntentions\\connector.lua')
+
 
 ## ✅ Supported Modules
 
@@ -22,13 +32,3 @@ The adapter is designed to support a wide range of flyable aircraft in DCS. Curr
 
 Each of these aircraft specific attributes must be extracted uniquely for each aircraft as they all differ. This offer more granular customization of how each module will interact with the API and allows more compatible modules to be added by the community. 
 
-
-## 🔧 Setup Instructions
-
-1. Download the latest release zip file
-2. Upack the release zip to get "SayIntentions" folder
-3. Put the `SayIntentions` folder in `<USER>/Saved Games/<DCS>/Scripts/`
-4. Add the following line to `Export.lua`. If the file does not exist, create it and add the following line. 
-
-```bash
-local dcssilfs=require('lfs');dofile(dcssilfs.writedir()..'Scripts\\SayIntentions\\connector.lua')
