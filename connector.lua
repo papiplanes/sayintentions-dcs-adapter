@@ -1,9 +1,9 @@
 package.path = package.path .. ";" .. g_lfs.writedir() .. "Scripts\\SayIntentions\\?.lua"
 
 -- Imports
-local json = loadfile("Scripts\\JSON.lua")()
-local utils = require("utils")
-local logger = require("logger")
+local json = loadfile("Scripts//JSON.lua")()
+local utils = require("utils//utils")
+local logger = require("utils//logger")
 
 -- Constants
 local ADAPTER_VERSION = "DCS_SIMAPI_V1"

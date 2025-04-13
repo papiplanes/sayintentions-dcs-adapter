@@ -1,5 +1,5 @@
-local utils = require("utils")
-local logger = require("logger")
+local utils = require("utils//utils")
+local logger = require("utils//logger")
 
 local FA18 = {}
 local DISABLED = 0
