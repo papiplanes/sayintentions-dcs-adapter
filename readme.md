@@ -32,3 +32,52 @@ The adapter is designed to support a wide range of flyable aircraft in DCS. Curr
 
 Each of these aircraft specific attributes must be extracted uniquely for each aircraft as they all differ. This offer more granular customization of how each module will interact with the API and allows more compatible modules to be added by the community. 
 
+## Example of SimAPI Expected simAPI_input.json file
+
+```json
+{
+    "sim": {
+        "adapter_version": "DCS_SIMAPI_V1",
+        "exe": "DCS",
+        "name": "DCS",
+        "simapi_version": "v1",
+        "variables": {
+            "AIRSPEED INDICATED": 12,
+            "AIRSPEED TRUE": 0,
+            "AMBIENT WIND DIRECTION": 359,
+            "AMBIENT WIND VELOCITY": 9,
+            "CIRCUIT COM ON:1": 1,
+            "CIRCUIT COM ON:2": 1,
+            "COM ACTIVE FREQUENCY:1": 305,
+            "COM ACTIVE FREQUENCY:2": 305,
+            "COM RECEIVE:1": 1,
+            "COM RECEIVE:2": 1,
+            "COM TRANSMIT:1": 1,
+            "COM TRANSMIT:2": 1,
+            "ELECTRICAL MASTER BATTERY:0": 1,
+            "ENGINE TYPE": 1,
+            "INDICATED ALTITUDE": 1820,
+            "LOCAL TIME": 65700,
+            "MAGNETIC COMPASS": 117,
+            "MAGVAR": -13,
+            "PLANE ALTITUDE": 1848,
+            "PLANE BANK DEGREES": 0,
+            "PLANE HEADING DEGREES TRUE": 129,
+            "PLANE LATITUDE": 36.227024019983,
+            "PLANE LONGITUDE": -115.04815793843,
+            "PLANE PITCH DEGREES": -1,
+            "SEA LEVEL PRESSURE": 2992,
+            "SIM ON GROUND": 1,
+            "TOTAL WEIGHT": 35633,
+            "TRANSPONDER CODE:1": 0,
+            "TRANSPONDER IDENT": 0,
+            "TRANSPONDER STATE:1": 0,
+            "TYPICAL DESCENT RATE": 2500,
+            "VERTICAL SPEED": -1,
+            "WHEEL RPM:1": 0,
+            "ZULU TIME": 65700
+        },
+        "version": "DCS Version: 2.9.14.83940  Module: FA-18C_hornet"
+    }
+}
+```

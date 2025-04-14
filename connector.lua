@@ -68,6 +68,9 @@ local function calculateMagneticVariation(ownshipData)
 end
 
 local function getCommonExportFields()
+    local simApiJson = {}
+    simApiJson["sim"] = {}
+
     local data = {}
     local ownshipData = LoGetSelfData()
     if not ownshipData then return data end
@@ -96,20 +99,21 @@ local function getCommonExportFields()
     data["ZULU TIME"] = LoGetMissionStartTime() or 0
 
     -- Metadata
-    data["name"] = "DCS"
-    data["version"] = dcsVersion
-    data["adapter_version"] = ADAPTER_VERSION
-    data["simapi_version"] = SIM_API_VERSION
-    data["exe"] = DCS_EXE
-
-    return data
+    simApiJson["sim"]["name"] = "DCS"
+    simApiJson["sim"]["version"] = dcsVersion
+    simApiJson["sim"]["adapter_version"] = ADAPTER_VERSION
+    simApiJson["sim"]["simapi_version"] = SIM_API_VERSION
+    simApiJson["sim"]["exe"] = DCS_EXE
+    simApiJson["sim"]["variables"] = data
+ 
+    return simApiJson
 end
 
 local function includeAircraftSpecificFields(data)
     if currentAircraftModule and currentAircraftModule.generateExportFields then
         local extra = currentAircraftModule.generateExportFields()
         for k, v in pairs(extra) do
-            data[k] = v
+            data["sim"]["variables"][k] = v
         end
     end
 end
@@ -157,7 +161,7 @@ local function detectSlotChange()
     if selfData and selfData.Name then
         local latestModuleName = selfData.Name
         if latestModuleName and latestModuleName ~= currentModuleName then
-            logger.log("Loainding new module")
+            logger.log("Loading new module")
             currentModuleName = latestModuleName
             initializeModule()
         end
