@@ -12,7 +12,7 @@ SayIntentions.AI provides AI-powered ATC for flight simulators — this adapter 
 
 ## 🔧 Setup Instructions
 
-1. Download the [latest release zip file]([url](https://github.com/papiplanes/sayintentions-dcs-adapter/releases/download/V1.0.0/SayIntentions.zip))
+1. Download the [latest release zip file](https://github.com/papiplanes/sayintentions-dcs-adapter/releases/download/V1.0.0/SayIntentions.zip)
 2. Upack the release zip to get "SayIntentions" folder
 3. Put the `SayIntentions` folder in `<USER>/Saved Games/<DCS>/Scripts/`
 4. Add the following line to `Export.lua`. If the file does not exist, create it and add the following line. 
