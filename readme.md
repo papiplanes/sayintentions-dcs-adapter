@@ -37,6 +37,11 @@ These modules have the following features
 - Wind telemetry
 - Local Time
 
+Feature Todo List:
+
+- [ ] Support setting the `simAPI_output` variables
+- [ ] Add more modules
+
 **Note**: You may be asking, "Why are only two modules supported?". Great question, if we look at the required telemetry data for [SimAPI ](https://portal.sayintentions.ai/simapi/v1/input_variables.txt), we see two categories of data we need. 1) Generic telemetry that all aircraft share 2) Aircraft specific attributes such as Transponder Codes, Electrical System State, Com1/Com2 Frequencies, etc. 
 
 Each of these aircraft specific attributes must be extracted uniquely for each aircraft as they all differ. This offer more granular customization of how each module will interact with the API and allows more compatible modules to be added by the community. 
