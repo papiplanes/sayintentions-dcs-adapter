@@ -85,8 +85,9 @@ function FA18.generateExportFields()
     end
 
     if UFC and UFC.UFC_OptionDisplay2 == "2   " then
-        IFF = UFC.UFC_ScratchPadString1Display == 'X' and ENABLED or DISABLED
-        local ExtractedMode3Code = string.match(UFC.UFC_ScratchPadNumberDisplay, "3-[0-7][0-7][0-7][0-7]")
+        local SIMAPI_TRANSPODER_ON = 3
+        IFF = UFC.UFC_ScratchPadString1Display == 'X' and SIMAPI_TRANSPODER_ON or DISABLED
+        local ExtractedMode3Code = tonumber(string.match(UFC.UFC_ScratchPadNumberDisplay, "3-[0-7][0-7][0-7][0-7]"))
         if ExtractedMode3Code then
             Mode3Code = ExtractedMode3Code
         end
