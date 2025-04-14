@@ -28,7 +28,7 @@ The adapter is designed to support a wide range of flyable aircraft in DCS. Curr
 - F/A-18C Hornet
 - UH-1H
 
-  These modules have the following features
+These modules have the following features
 - Landing detection (Touch down location, vertical velocity)
 - Mode 3 Transponder Code
 - Transponder Ident
