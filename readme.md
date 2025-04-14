@@ -12,7 +12,7 @@ SayIntentions.AI provides AI-powered ATC for flight simulators — this adapter 
 
 ## 🔧 Setup Instructions
 
-1. Download the latest release zip file
+1. Download the [latest release zip file](https://github.com/papiplanes/sayintentions-dcs-adapter/releases/download/V1.0.0/SayIntentions.zip)
 2. Upack the release zip to get "SayIntentions" folder
 3. Put the `SayIntentions` folder in `<USER>/Saved Games/<DCS>/Scripts/`
 4. Add the following line to `Export.lua`. If the file does not exist, create it and add the following line. 
@@ -27,6 +27,20 @@ The adapter is designed to support a wide range of flyable aircraft in DCS. Curr
 
 - F/A-18C Hornet
 - UH-1H
+
+These modules have the following features
+- Landing detection (Touch down location, vertical velocity)
+- Mode 3 Transponder Code
+- Transponder Ident
+- Accurate indicated altitude (based on what pilots see on their gauges)
+- Total aircraft weigth (empty weight + fuel + pilot)
+- Wind telemetry
+- Local Time
+
+Feature Todo List:
+
+- [ ] Support setting the `simAPI_output` variables
+- [ ] Add more modules
 
 **Note**: You may be asking, "Why are only two modules supported?". Great question, if we look at the required telemetry data for [SimAPI ](https://portal.sayintentions.ai/simapi/v1/input_variables.txt), we see two categories of data we need. 1) Generic telemetry that all aircraft share 2) Aircraft specific attributes such as Transponder Codes, Electrical System State, Com1/Com2 Frequencies, etc. 
 
