@@ -36,6 +36,7 @@ These modules have the following features
 - Total aircraft weigth (empty weight + fuel + pilot)
 - Wind telemetry
 - Local Time
+- Gracefully handle re-slotting/dying 
 
 Feature Todo List:
 
