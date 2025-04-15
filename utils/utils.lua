@@ -44,6 +44,23 @@ function utils.vectorToWind(vector)
     return windDirection, windSpeed
 end
 
+function utils.calculateMagneticVariation(trueHeadingDegrees, magneticHeadingDegrees)
+    local trueHeading = trueHeadingDegrees
+    local magneticHeading = math.floor(magneticHeadingDegrees * 180 / math.pi) % 360
+
+    if magneticHeading < 0 then
+        magneticHeading = magneticHeading + 360
+    end
+
+    local magvar = (magneticHeading - trueHeading + 360) % 360
+    if magvar > 180 then
+        magvar = magvar - 360
+    end
+    -- This might not be what Magnetic Variation is... 
+    -- I am calculating the difference between True and Mag heading
+    return magvar
+end
+
 function utils.tableToString(tbl, indent)
 	indent = indent or 2
 	local result = ""
@@ -79,6 +96,22 @@ function utils.calculateWheelRPMFromKnotsAndRadius(speed_knots, radius_in)
     local circumference = 2 * math.pi * radius_in
     local rpm = inches_per_minute / circumference
     return rpm
+end
+
+function utils.getDCSVersionInfromation()
+    local version = LoGetVersionInfo()
+    return string.format("DCS Version: %d.%d.%d.%d",
+        version.ProductVersion[1],
+        version.ProductVersion[2],
+        version.ProductVersion[3],
+        version.ProductVersion[4]
+    )
+end
+
+function utils.mergeTables(target, source)
+    for k, v in pairs(source) do
+        target[k] = v
+    end
 end
 
 

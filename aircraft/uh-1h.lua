@@ -1,4 +1,5 @@
 local utils = require("utils//utils")
+local logger = require("utils//logger")
 
 local UH1H = {}
 local DISABLED = 0
@@ -9,6 +10,19 @@ local COPILOT_WEIGHT = 200
 local TYPICAL_DESCENT_RATE_FPM = 500
 local ENGINE_TYPE = utils.SayIntetionsEngineTypes.TurbineHelicopter
 local MAX_FUEL_INTERNAL_LBS = 1400
+
+
+function UH1H.setMode3Transponder(code)
+    -- TODO
+end
+
+function UH1H.setCom1(freq)
+    local VHFRadio = GetDevice(20)
+    if VHFRadio then
+        VHFRadio:set_frequency(freq)
+        logger.log("Set VHF freq to: "..freq)
+    end
+end
 
 function UH1H.generateExportFields()
     local MainPanel = GetDevice(0)
@@ -25,8 +39,7 @@ function UH1H.generateExportFields()
         -- DCS Huey Battery Switch: 0 means switch is enabled, tell SI
         MasterBattery = MainPanel:get_argument_value(219) == 0 and ENABLED or DISABLED
 
-        -- DCS state 3 is on, so is SI. but other modes are wrong, todo fix
-        IFFState = MainPanel:get_argument_value(57)
+        IFFState = math.floor((MainPanel:get_argument_value(59) + 0.05) * 10)
 
         local ThousandsNeedle = MainPanel:get_argument_value(179)
         if ThousandsNeedle < 0.995 then

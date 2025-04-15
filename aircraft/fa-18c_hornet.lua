@@ -18,6 +18,18 @@ local Ident = DISABLED
 local IFF = DISABLED
 local Mode3Code = 0
 
+function FA18.setMode3Transponder(code)
+    logger.log("TODO: Implement Setting Mode 3 Transponder in Hornet")
+end
+
+function FA18.setCom1(freq)
+    local UHF1 = GetDevice(38)
+    if UHF1 then
+        UHF1:set_frequency(freq)
+        logger.log("Set UHF1 freq to: "..freq)
+    end
+end
+
 function FA18.generateExportFields()
     local MainPanel = GetDevice(0)
     local UHF1 = GetDevice(38)
@@ -96,7 +108,7 @@ function FA18.generateExportFields()
     local latestAGL = LoGetAltitudeAboveGroundLevel()
     local latestEngineInfo = LoGetEngineInfo()
     local latestTAS = LoGetTrueAirSpeed() or 0
-    
+
     IsOnGround = DISABLED
     if latestAGL and latestAGL <= 2 then
         IsOnGround = ENABLED
