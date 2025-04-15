@@ -26,7 +26,8 @@ local dcssilfs=require('lfs');dofile(dcssilfs.writedir()..'Scripts\\SayIntention
 The adapter is designed to support a wide range of flyable aircraft in DCS. Currently tested and confirmed working with:
 
 - F/A-18C Hornet
-- UH-1H
+- UH-1H Huey
+- F16C Viper
 
 These modules have the following features
 - Landing detection (Touch down location, vertical velocity)
