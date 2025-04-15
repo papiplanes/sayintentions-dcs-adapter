@@ -32,6 +32,7 @@ function ModuleManager.initalizeModule(name)
         if ok and type(mod) == "table" then
             ModuleManager.currentModule = mod
             ModuleManager.currentModuleName = name
+            logger.log("Aircraft detected: "..name)
         end
     else
         logger.log("Aircraft script not found: " .. path)

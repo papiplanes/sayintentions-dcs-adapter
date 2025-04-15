@@ -34,15 +34,13 @@ function SimAPIService.writeExportFile(exportFields, moduleName)
     simApiJson["sim"]["exe"] = SimAPIService.simulator_exe_title
     simApiJson["sim"]["variables"] = exportFields
 
-    return simApiJson
-end
-
-function SimAPIService.writeExportFile(data)
-    local jsonData = json:encode(data)
     local file = io.open(SIMAPI_INPUT_FILE, "w")
     if file then
-        file:write(jsonData)
+        file:write(json:encode(simApiJson))
         file:close()
+    else
+        logger.log("Failed to export simAPI_input.json file")
+
     end
 end
 
