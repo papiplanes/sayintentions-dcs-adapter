@@ -36,13 +36,13 @@ These modules have the following features
 - Total aircraft weigth (empty weight + fuel + pilot)
 - Wind telemetry
 - Local Time
-- Gracefully handle re-slotting/dying 
+- Gracefully handle re-slotting/dying
+- SayIntentions can set Com 1 channel
 
 Feature Todo List:
 
-- [ ] Support setting the `simAPI_output` variables
 - [ ] Add more modules
-- [ ] Support SkyOps on 122.11 (Huey for example can not tune radio to that)
+- [ ] Support SkyOps on 122.11 (Huey for example can not tune radio to that). Could do a special DCS freq that maps to the SkyOps freq, or some override switch to like an intercom button to SkyOps (this would mock the com1 value to 122.1)
 - [ ] Expore adding smoke/map markers for SkyOps (requires SayIntentionsAI SimAPI to include some objective locations in the `simAPI_output.json` file.
 
 **Note**: You may be asking, "Why are only two modules supported?". Great question, if we look at the required telemetry data for [SimAPI ](https://portal.sayintentions.ai/simapi/v1/input_variables.txt), we see two categories of data we need. 1) Generic telemetry that all aircraft share 2) Aircraft specific attributes such as Transponder Codes, Electrical System State, Com1/Com2 Frequencies, etc. 
