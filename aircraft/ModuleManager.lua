@@ -54,15 +54,16 @@ function ModuleManager.getExportFields()
     local exportFields = {}
     local ownshipData = LoGetSelfData()
 
-    local trueHeading = utils.radToDeg(ownshipData.Heading)
-    local magneticHeading = utils.radToDeg(LoGetMagneticYaw())
+    local trueHeading = (utils.radToDeg(ownshipData.Heading) + 360) % 360
+    local magneticHeading = (utils.radToDeg(LoGetMagneticYaw()) + 360) % 360
     local magVariation = utils.calculateMagneticVariation(trueHeading, magneticHeading)
 
-    local pitch, bank = LoGetADIPitchBankYaw()
+    local pitch, bank, _ = LoGetADIPitchBankYaw()
     local lat = ownshipData.LatLongAlt.Lat
     local lng = ownshipData.LatLongAlt.Long
     local windDirection, windSpeed = utils.vectorToWind(LoGetVectorWindVelocity())
 
+    -- Load generic export fields
     exportFields["AIRSPEED INDICATED"] = math.floor(utils.mpsToKnots(LoGetIndicatedAirSpeed() or 0))
     exportFields["AIRSPEED TRUE"] = math.floor(utils.mpsToKnots(LoGetTrueAirSpeed() or 0))
     exportFields["MAGNETIC COMPASS"] = math.floor(magneticHeading or 0)
@@ -80,7 +81,7 @@ function ModuleManager.getExportFields()
     exportFields["LOCAL TIME"] = LoGetMissionStartTime() or 0
     exportFields["ZULU TIME"] = LoGetMissionStartTime() or 0
 
-    -- Load module specific fields (Com, Transponder, Fuel)
+    -- Load module specific export fields
     local moduleFields = ModuleManager.currentModule.generateExportFields()
     for key, value in pairs(moduleFields) do
         exportFields[key] = value

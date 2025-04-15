@@ -1,46 +1,78 @@
 local lfs = require('lfs')
 package.path = package.path .. ";" .. lfs.writedir() .. "Scripts\\SayIntentions\\?.lua"
 
--- Imports
 local logger = require("utils//logger")
 local SimAPIService = require("SimAPIService")
 local moduleManager = require("aircraft//ModuleManager")
 
---------------------------------------------------------------------------------
--- SayIntentions Commands
---------------------------------------------------------------------------------
-local function processSimAPIExport()
+local SayIntentions = {}
+
+function SayIntentions.processSimAPIExport()
     local moduleExportFields = moduleManager.getExportFields()
     local moduleName = moduleManager.currentModuleName
     SimAPIService.writeExportFile(moduleExportFields, moduleName)
 end
 
-local function processSimAPIInputs()
+function SayIntentions.processSimAPIInputs()
     local latestCommands = SimAPIService.getLatestCommmadsFromSimAPI()
     moduleManager.processSimAPICommands(latestCommands)
 end
 
---------------------------------------------------------------------------------
--- DCS Export Functions
---------------------------------------------------------------------------------
-function LuaExportStart()
+function SayIntentions.init()
     SimAPIService.initalize()
-    logger.log("Export Script Loaded.")
+    logger.log("SayIntentions Export Script Loaded.")
 end
 
-function LuaExportActivityNextEvent(timestamp)
+function SayIntentions.update()
     moduleManager.update()
 
     if moduleManager.currentModule then
-        processSimAPIExport()
-        processSimAPIInputs()
+        SayIntentions.processSimAPIExport()
+        SayIntentions.processSimAPIInputs()
     else
         logger.log("Can not find current aircraft module")
     end
+end
 
-    return timestamp + 1.0
+function SayIntentions.stop()
+    logger.log("SayIntentions Export Script Stopping.")
+end
+
+local SayIntentionsExport = {}
+SayIntentionsExport.LuaExportStart              = LuaExportStart
+SayIntentionsExport.LuaExportStop               = LuaExportStop
+SayIntentionsExport.LuaExportBeforeNextFrame    = LuaExportBeforeNextFrame
+SayIntentionsExport.LuaExportAfterNextFrame     = LuaExportAfterNextFrame
+SayIntentionsExport.LuaExportActivityNextEvent  = LuaExportActivityNextEvent
+
+function LuaExportStart()
+    SayIntentions.init()
+    if SayIntentionsExport.LuaExportStart then
+        SayIntentionsExport.LuaExportStart()
+    end
 end
 
 function LuaExportStop()
-    logger.log("Export Script Stopping.")
+    SayIntentions.stop()
+
+    if SayIntentionsExport.LuaExportStop then
+        SayIntentionsExport.LuaExportStop()
+    end
+end
+
+function LuaExportActivityNextEvent(t)
+    SayIntentions.update()
+    return t + 1.0
+end
+
+function LuaExportBeforeNextFrame()
+    if SayIntentionsExport.LuaExportBeforeNextFrame then
+        SayIntentionsExport.LuaExportBeforeNextFrame()
+    end
+end
+
+function LuaExportAfterNextFrame()
+    if SayIntentionsExport.LuaExportAfterNextFrame then
+        SayIntentionsExport.LuaExportAfterNextFrame()
+    end
 end

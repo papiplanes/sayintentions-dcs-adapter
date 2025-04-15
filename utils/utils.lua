@@ -44,21 +44,12 @@ function utils.vectorToWind(vector)
     return windDirection, windSpeed
 end
 
+function utils.stripStringOfNonNumbers(string)
+ return string.gsub(string, "%D", "") or "0"
+end
+
 function utils.calculateMagneticVariation(trueHeadingDegrees, magneticHeadingDegrees)
-    local trueHeading = trueHeadingDegrees
-    local magneticHeading = math.floor(magneticHeadingDegrees * 180 / math.pi) % 360
-
-    if magneticHeading < 0 then
-        magneticHeading = magneticHeading + 360
-    end
-
-    local magvar = (magneticHeading - trueHeading + 360) % 360
-    if magvar > 180 then
-        magvar = magvar - 360
-    end
-    -- This might not be what Magnetic Variation is... 
-    -- I am calculating the difference between True and Mag heading
-    return magvar
+    return (trueHeadingDegrees - magneticHeadingDegrees + 540) % 360 - 180
 end
 
 function utils.tableToString(tbl, indent)
@@ -68,7 +59,7 @@ function utils.tableToString(tbl, indent)
 	for key, value in pairs(tbl) do
 		if type(value) == "table" then
 			result = result .. formatting .. tostring(key) .. ":\n"
-			result = result .. ufcPatch.tableToString(value, indent + 1)  -- Recursive call for nested tables
+			result = result .. ufcPatch.tableToString(value, indent + 1)
 		else
 			result = result .. formatting .. tostring(key) .. " = " .. tostring(value) .. "\n"
 		end
@@ -106,12 +97,6 @@ function utils.getDCSVersionInfromation()
         version.ProductVersion[3],
         version.ProductVersion[4]
     )
-end
-
-function utils.mergeTables(target, source)
-    for k, v in pairs(source) do
-        target[k] = v
-    end
 end
 
 
